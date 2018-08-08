@@ -7,7 +7,7 @@
 // Injector constants
 const int Min_Step = 50;
 const int Max_Step = 5000;
-const int Air_Step = 1800;
+const int Air_Step = 3600;
 
 // Injector class
 class Dev1 {
