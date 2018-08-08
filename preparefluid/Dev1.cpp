@@ -60,6 +60,22 @@ int Dev1::getPosition() {
 }
 
 bool Dev1::goToPos(int position) {
+	CString c;
+	if (position > Max_Step) {
+		c.Format("Warning! Attempt to move to position=%d bigger than max step, current position=%d", 
+			position, getPosition());
+		AfxMessageBox(c);
+
+		position = Max_Step;
+	}
+	if (position < 0) {
+		c.Format("Warning! Attempt to move to negative position=%d, current position=%d", 
+			position, getPosition());
+		AfxMessageBox(c);
+
+		position = 0;
+	}
+
 	char bufPosition[10], bufInSpeed[10], bufOutSpeed[10];
 	itoa(position, bufPosition, 10);
 	itoa(inSpeed, bufInSpeed, 10);

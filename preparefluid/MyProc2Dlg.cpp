@@ -717,12 +717,14 @@ int process_full(CMyProc2Dlg *mainDlg) {
 		// output is still in waste
 
 		// get input solution into hoses
-		dev1.goLeft();
-		dev1.goToPos(2 * Air_Step);
-		waitWhenPaused(mainDlg, generatePause);
-		dev1.goRight();
-		dev1.goToPos(0);
-		waitWhenPaused(mainDlg, generatePause);
+		for (j = 0; j < 2; j++) {
+			dev1.goLeft();
+			dev1.goToPos(Air_Step);
+			waitWhenPaused(mainDlg, generatePause);
+			dev1.goRight();
+			dev1.goToPos(0);
+			waitWhenPaused(mainDlg, generatePause);
+		}
 
 		for (j = 0; j < data.nOutput; j++) {
 			k = data.outArray[i][j];
