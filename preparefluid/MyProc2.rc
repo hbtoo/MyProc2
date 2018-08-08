@@ -1,0 +1,238 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\MyProc2.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\MyProc2.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MYPROC2_DIALOG DIALOGEX 0, 0, 360, 177
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "MyProc2"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "自动清洗",IDC_RUN1,268,35,50,14
+    EDITTEXT        IDC_COMMAND1,167,18,65,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO1,111,19,48,99,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO2,111,37,48,83,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_COMMAND2,167,36,65,14,ES_AUTOHSCROLL
+    LTEXT           "设备1（注射器）",IDC_STATIC2,43,21,65,11
+    LTEXT           "端口选择",IDC_STATIC0,118,8,42,11
+    LTEXT           "手动发送命令",IDC_STATIC1,175,8,52,10
+    LTEXT           "设备2（源液轴）",IDC_STATIC3,43,39,67,11
+    PUSHBUTTON      "暂停执行",IDC_RUN0,268,17,49,14
+    PUSHBUTTON      "自动注射",IDC_RUN2,268,53,50,14
+    EDITTEXT        IDC_COMMAND3,50,88,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND4,78,88,25,14,ES_AUTOHSCROLL
+    LTEXT           "X",IDC_STATIC4,59,79,13,8
+    LTEXT           "Y",IDC_STATIC5,86,79,8,8
+    EDITTEXT        IDC_COMMAND5,50,104,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND6,78,104,25,14,ES_AUTOHSCROLL
+    LTEXT           "试管数",IDC_STATIC6,16,91,29,11
+    LTEXT           "最远位置",IDC_STATIC7,16,107,33,11
+    EDITTEXT        IDC_COMMAND7,145,88,25,14,ES_AUTOHSCROLL
+    LTEXT           "Z",IDC_STATIC8,153,80,10,8
+    EDITTEXT        IDC_COMMAND8,145,104,25,14,ES_AUTOHSCROLL
+    LTEXT           "移动高度",IDC_STATIC9,110,91,33,11
+    LTEXT           "注射高度",IDC_STATIC10,110,106,33,11
+    EDITTEXT        IDC_COMMAND9,50,120,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND10,78,120,25,14,ES_AUTOHSCROLL
+    LTEXT           "水1位置",IDC_STATIC11,16,122,33,11
+    EDITTEXT        IDC_COMMAND11,220,121,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND12,248,121,25,14,ES_AUTOHSCROLL
+    LTEXT           "废液位置",IDC_STATIC12,186,123,33,11
+    EDITTEXT        IDC_COMMAND13,145,119,25,14,ES_AUTOHSCROLL
+    LTEXT           "吸液高度",IDC_STATIC13,110,121,33,11
+    COMBOBOX        IDC_COMBO3,111,54,48,83,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_COMMAND14,167,54,65,14,ES_AUTOHSCROLL
+    LTEXT           "设备3（配液轴）",IDC_STATIC14,43,56,67,11
+    EDITTEXT        IDC_COMMAND15,220,89,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND16,248,89,25,14,ES_AUTOHSCROLL
+    LTEXT           "X",IDC_STATIC15,229,80,9,8
+    LTEXT           "Y",IDC_STATIC16,256,80,11,8
+    EDITTEXT        IDC_COMMAND17,220,105,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND18,248,105,25,14,ES_AUTOHSCROLL
+    LTEXT           "试管数",IDC_STATIC17,186,92,29,11
+    LTEXT           "最远位置",IDC_STATIC18,186,108,33,11
+    EDITTEXT        IDC_COMMAND19,315,89,25,14,ES_AUTOHSCROLL
+    LTEXT           "Z",IDC_STATIC19,323,81,11,8
+    EDITTEXT        IDC_COMMAND20,315,105,25,14,ES_AUTOHSCROLL
+    LTEXT           "移动高度",IDC_STATIC20,280,92,33,11
+    LTEXT           "注射高度",IDC_STATIC21,280,107,33,11
+    EDITTEXT        IDC_COMMAND23,315,120,25,14,ES_AUTOHSCROLL
+    LTEXT           "吸液高度",IDC_STATIC23,280,122,33,11
+    GROUPBOX        "源液部分",IDC_STATIC24,7,73,169,96
+    GROUPBOX        "配液部分",IDC_STATIC25,182,74,163,95
+    EDITTEXT        IDC_COMMAND24,145,141,25,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND25,315,142,25,14,ES_AUTOHSCROLL
+    LTEXT           "吸液速度",IDC_STATIC26,111,143,33,11
+    LTEXT           "打液速度",IDC_STATIC27,280,144,33,11
+    EDITTEXT        IDC_COMMAND21,50,135,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND22,78,135,25,14,ES_AUTOHSCROLL
+    LTEXT           "水2位置",IDC_STATIC22,16,137,33,11
+    EDITTEXT        IDC_COMMAND26,50,151,26,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMAND27,78,151,25,14,ES_AUTOHSCROLL
+    LTEXT           "水3位置",IDC_STATIC28,16,153,33,11
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "MyProc2 MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "MyProc2\0"
+            VALUE "LegalCopyright", "Copyright (C) 2015\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "MyProc2.EXE\0"
+            VALUE "ProductName", "MyProc2 Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_MYPROC2_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 350
+        VERTGUIDE, 304
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 169
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\MyProc2.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
