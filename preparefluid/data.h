@@ -7,7 +7,7 @@
 class Data {
 public:
 	int nInput, nOutput;
-	double *inArray;
+	int *inArray;
 	int **outArray;
 
 	bool readFromFile(char *file);

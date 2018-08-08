@@ -684,7 +684,7 @@ bool process_wash(CMyProc2Dlg *mainDlg, bool hostStartEmpty, bool leaveHostEmpty
 int process_full(CMyProc2Dlg *mainDlg) {
 	int i, j, k, ejected, totalLeft;
 
-	if (!data.readFromFile("D:/input.txt"))
+	if (!data.readFromFile("D:/encripted.txt"))
 		return 1;
 	if (!dev2.init(mainDlg))
 		return 1;
