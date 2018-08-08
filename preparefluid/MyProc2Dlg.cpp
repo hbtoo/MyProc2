@@ -330,7 +330,7 @@ BOOL CMyProc2Dlg::OnInitDialog() {
 	GetDlgItem(IDC_COMMAND3)->SetWindowText("8");
 	GetDlgItem(IDC_COMMAND4)->SetWindowText("8");
 	GetDlgItem(IDC_COMMAND5)->SetWindowText("22000");
-	GetDlgItem(IDC_COMMAND6)->SetWindowText("22000");
+	GetDlgItem(IDC_COMMAND6)->SetWindowText("21000");
 	GetDlgItem(IDC_STATIC8)->SetWindowText("Z");
 	GetDlgItem(IDC_STATIC9)->SetWindowText("移动高度");
 	GetDlgItem(IDC_STATIC10)->SetWindowText("注射高度");
@@ -340,14 +340,14 @@ BOOL CMyProc2Dlg::OnInitDialog() {
 	GetDlgItem(IDC_COMMAND13)->SetWindowText("10000");
 
 	GetDlgItem(IDC_STATIC11)->SetWindowText("水1位置");
-	GetDlgItem(IDC_COMMAND9)->SetWindowText("25000");
-	GetDlgItem(IDC_COMMAND10)->SetWindowText("8000");
+	GetDlgItem(IDC_COMMAND9)->SetWindowText("1000");
+	GetDlgItem(IDC_COMMAND10)->SetWindowText("27000");
 	GetDlgItem(IDC_STATIC22)->SetWindowText("水2位置");
-	GetDlgItem(IDC_COMMAND21)->SetWindowText("25000");
-	GetDlgItem(IDC_COMMAND22)->SetWindowText("16000");
+	GetDlgItem(IDC_COMMAND21)->SetWindowText("10000");
+	GetDlgItem(IDC_COMMAND22)->SetWindowText("27000");
 	GetDlgItem(IDC_STATIC28)->SetWindowText("水3位置");
-	GetDlgItem(IDC_COMMAND26)->SetWindowText("25000");
-	GetDlgItem(IDC_COMMAND27)->SetWindowText("25000");
+	GetDlgItem(IDC_COMMAND26)->SetWindowText("20000");
+	GetDlgItem(IDC_COMMAND27)->SetWindowText("27000");
 	GetDlgItem(IDC_STATIC26)->SetWindowText("吸液速度");
 	GetDlgItem(IDC_COMMAND24)->SetWindowText("500");
 
@@ -358,10 +358,10 @@ BOOL CMyProc2Dlg::OnInitDialog() {
 	GetDlgItem(IDC_STATIC16)->SetWindowText("Y");
 	GetDlgItem(IDC_STATIC17)->SetWindowText("试管数");
 	GetDlgItem(IDC_STATIC18)->SetWindowText("最远位置");
-	GetDlgItem(IDC_COMMAND15)->SetWindowText("8");
+	GetDlgItem(IDC_COMMAND15)->SetWindowText("9");
 	GetDlgItem(IDC_COMMAND16)->SetWindowText("8");
-	GetDlgItem(IDC_COMMAND17)->SetWindowText("22000");
-	GetDlgItem(IDC_COMMAND18)->SetWindowText("22000");
+	GetDlgItem(IDC_COMMAND17)->SetWindowText("24000");
+	GetDlgItem(IDC_COMMAND18)->SetWindowText("21000");
 	GetDlgItem(IDC_STATIC19)->SetWindowText("Z");
 	GetDlgItem(IDC_STATIC20)->SetWindowText("移动高度");
 	GetDlgItem(IDC_STATIC21)->SetWindowText("注射高度");
@@ -371,8 +371,8 @@ BOOL CMyProc2Dlg::OnInitDialog() {
 	GetDlgItem(IDC_COMMAND23)->SetWindowText("10000");
 	
 	GetDlgItem(IDC_STATIC12)->SetWindowText("废液位置");
-	GetDlgItem(IDC_COMMAND11)->SetWindowText("25000");
-	GetDlgItem(IDC_COMMAND12)->SetWindowText("6500");
+	GetDlgItem(IDC_COMMAND11)->SetWindowText("11500");
+	GetDlgItem(IDC_COMMAND12)->SetWindowText("25000");
 	GetDlgItem(IDC_STATIC27)->SetWindowText("打液速度");
 	GetDlgItem(IDC_COMMAND25)->SetWindowText("1000");
 
@@ -619,56 +619,10 @@ BOOL CMyProc2Dlg::PreTranslateMessage(MSG* pMsg) {
 void waitWhenPaused(CMyProc2Dlg *mainDlg, bool genPause) {
 	if (genPause)
 		mainDlg->OnRun0();
-	if (executingState != 1) {
-		while (executingState != 1)
-			Sleep(200);
-		return;
-	}
+	while (executingState != 1)
+		Sleep(200);
+	return;
 }
-
-
-/*
-bool process_one_batch_two(CMyProc2Dlg *mainDlg) {
-	int output[1000], i, n;
-	char *file = "D:/input.txt";
-	FILE *f = fopen(file, "r");
-	CString c;
-	c.Format("无法打开文件%s", file);
-	if (f == NULL) {
-		AfxMessageBox(c);
-		return false;
-	}
-	fclose(f);
-
-	ifstream fin(file);
-	if (!fin.is_open()) {
-		AfxMessageBox(c);
-		return false;
-	}
-	n = 0;
-	while (!fin.eof()) {
-		fin >> output[n++];
-	}
-	fin.close();
-
-	CString str;
-	str.Format("将注射 %d 个试管，确认开始?", n);
-	if (MessageBox(NULL, str, "", MB_YESNO) != IDYES)
-		return false;
-
-	dev1.goLeft();
-	dev1.goToPos(1000);
-	dev1.goRight();
-	dev1.goToPos(0);
-	waitWhenPaused(mainDlg, generatePause);
-
-	for (i = 0; i < n; i++) {
-		dev1.ejectTwoSide(output[i], true);
-		waitWhenPaused(mainDlg, generatePause);
-	}
-	return true;
-}
-*/
 
 bool empty_hose(CMyProc2Dlg *mainDlg) {
 	if (!dev2.moveToAir())
@@ -896,10 +850,20 @@ DWORD WINAPI ThreadFunc(LPVOID lpParam) {
 	return 0;
 }
 
+DWORD WINAPI AbortThreadFunc(LPVOID lpParam) {
+	CMyProc2Dlg *mainDlg = (CMyProc2Dlg *)lpParam;
+	dev2.moveToPosition(0, 0, 0, 0);
+	empty_hose(mainDlg);
+	dev2.moveToPosition(1, 0, 0, 0);
+	threadFinished(mainDlg, false);
+	return 0;
+}
+
 /* executingState
  * 0: not running
  * 1: running
  * 2: paused 
+ * 3: aborting
  *
  * mode
  * 0: test
@@ -909,6 +873,9 @@ DWORD WINAPI ThreadFunc(LPVOID lpParam) {
 */
 void CMyProc2Dlg::runAutoThread(int mode) {
 	CWnd *button1, *button2;
+	button1 = GetDlgItem(IDC_RUN1);
+	button2 = GetDlgItem(IDC_RUN2);
+
 	if (executingState == 0) {
 		executingState = 1;
 		autoThreadMode = mode;
@@ -925,8 +892,6 @@ void CMyProc2Dlg::runAutoThread(int mode) {
 		SetThreadPriority(thread, THREAD_PRIORITY_HIGHEST); 
 		ResumeThread(thread);
 
-		button1 = GetDlgItem(IDC_RUN1);
-		button2 = GetDlgItem(IDC_RUN2);
 		if (autoThreadMode == 1) {
 			button1->SetWindowText("终止清洗");
 			button2->EnableWindow(false);
@@ -934,29 +899,40 @@ void CMyProc2Dlg::runAutoThread(int mode) {
 			button1->EnableWindow(false);
 			button2->SetWindowText("终止注射");
 		}
-	} else if (thread != NULL && autoThreadMode == mode) {
-		// 终止自动程序
-		TerminateThread(thread, 0);
-		threadFinished(this, false);
+	} else if (executingState != 3) {
+		if (thread != NULL && autoThreadMode == mode) {
+			// Abort
+			TerminateThread(thread, 0);
 
-		dev2.moveToPosition(0, 0, 0, 0);
-		empty_hose(this);
-		dev2.moveToPosition(1, 0, 0, 0);
+			if (autoThreadMode == 1) {
+				button1->SetWindowText("停止中");
+			} else if (autoThreadMode == 2) {
+				button2->SetWindowText("停止中");
+			}
+
+			DWORD dwThreadId;
+			thread = CreateThread( 
+				NULL,					// no security attributes 
+				0,						// use default stack size  
+				AbortThreadFunc,			// thread function 
+				this,					// argument to thread function 
+				CREATE_SUSPENDED,		// use default creation flags 
+				&dwThreadId);			// returns the thread identifier 
+			SetThreadPriority(thread, THREAD_PRIORITY_HIGHEST); 
+			ResumeThread(thread);
+		}
 	}
 }
 
 void CMyProc2Dlg::OnRun0() {
 	CWnd *button = GetDlgItem(IDC_RUN0);
-	if (executingState == 0) {
-		// do nothing
-	} else if (executingState == 1) {	// pause execution
+	if (executingState == 1) {	// pause execution
 		executingState = 2;
 		button->SetWindowText("继续执行");
 	} else if (executingState == 2) {	// resume execution
 		executingState = 1;
 		button->SetWindowText("暂停执行");
-	} else
-		AfxMessageBox("no way");
+	}
 }
 
 void CMyProc2Dlg::OnRun1() {
