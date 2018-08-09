@@ -20,6 +20,17 @@ bool Dev1::loadFromFrontEnd(CMyProc2Dlg *mainDlg) {
 	if (inSpeed == -1 || outSpeed == -1)
 		return false;
 
+	mainDlg->GetDlgItem(IDC_COMMAND28)->GetWindowText(buffer, 100);
+	airStep = messageIfNegative(buffer, false);
+	if (airStep == -1)
+		return false;
+	if (airStep > Max_Step) {
+		CString c;
+		c.Format("单边管长不能超过%d", Max_Step);
+		AfxMessageBox(c);
+		return false;
+	}
+
 	return true;
 }
 

@@ -68,6 +68,8 @@
 #define IDC_COMMAND26                   1059
 #define IDC_COMMAND27                   1060
 #define IDC_STATIC28                    1061
+#define IDC_COMMAND28                   1062
+#define IDC_STATIC29                    1063
 
 // Next default values for new objects
 // 

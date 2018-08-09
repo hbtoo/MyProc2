@@ -256,7 +256,7 @@ BEGIN_MESSAGE_MAP(CMyProc2Dlg, CDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO1, OnSelchangeCombo1)
 	ON_CBN_SELCHANGE(IDC_COMBO2, OnSelchangeCombo2)
 	ON_BN_CLICKED(IDC_RUN0, OnRun0)
-	ON_BN_CLICKED(IDC_RUN, OnRun1)
+	//ON_BN_CLICKED(IDC_RUN, OnRun1)
 	ON_BN_CLICKED(IDC_RUN2, OnRun2)
 	ON_CBN_SELCHANGE(IDC_COMBO3, OnSelchangeCombo3)
 	ON_BN_CLICKED(IDC_RUN1, OnRun1)
@@ -376,9 +376,11 @@ BOOL CMyProc2Dlg::OnInitDialog() {
 	GetDlgItem(IDC_STATIC27)->SetWindowText("打液速度");
 	GetDlgItem(IDC_COMMAND25)->SetWindowText("1000");
 
+	GetDlgItem(IDC_STATIC29)->SetWindowText("单边管长");
+	GetDlgItem(IDC_COMMAND28)->SetWindowText("2000");
+
 	GetDlgItem(IDC_STATIC25)->SetWindowText("配液部分");
 	
-
 
 	maxNoResponseTime1 = 1000;
 	maxNoResponseTime2 = 20000;
@@ -635,14 +637,14 @@ bool empty_hose(CMyProc2Dlg *mainDlg) {
 
 	if (!dev1.goLeft())
 		return false;
-	dev1.goToPos(Air_Step + dev1.getPosition());
+	dev1.goToPos(dev1.airStep + dev1.getPosition());
 	waitWhenPaused(mainDlg, generatePause);
 	dev1.goRight();
 	dev1.goToPos(0);
 	waitWhenPaused(mainDlg, generatePause);
 
 	dev1.goLeft();
-	dev1.goToPos(Air_Step);
+	dev1.goToPos(dev1.airStep);
 	waitWhenPaused(mainDlg, generatePause);
 	dev1.goRight();
 	dev1.goToPos(0);
@@ -719,7 +721,7 @@ int process_full(CMyProc2Dlg *mainDlg) {
 		// get input solution into hoses
 		for (j = 0; j < 2; j++) {
 			dev1.goLeft();
-			dev1.goToPos(Air_Step);
+			dev1.goToPos(dev1.airStep);
 			waitWhenPaused(mainDlg, generatePause);
 			dev1.goRight();
 			dev1.goToPos(0);

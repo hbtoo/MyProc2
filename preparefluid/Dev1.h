@@ -7,7 +7,6 @@
 // Injector constants
 const int Min_Step = 50;
 const int Max_Step = 5000;
-const int Air_Step = 3600;
 
 // Injector class
 class Dev1 {
@@ -15,12 +14,14 @@ public:
 	CMyProc2Dlg *mainDlg;
 	CString precommand;
 	//int devID;
-	
+
 	int curStep;
 	bool inLeft;
 
 	int inSpeed;
 	int outSpeed;
+
+	int airStep;
 
 	Dev1();
 	bool loadFromFrontEnd(CMyProc2Dlg *mainDlg);

@@ -7,12 +7,6 @@ Dev2::Dev2() {
 	mainDlg = NULL;
 }
 
-/*
-CString c;
-c.Format("haha %d!", n);
-mainDlg->GetDlgItem(IDC_COMMAND1)->SetWindowText(c);
-*/
-
 int messageIfNegative(char *str, bool zeroOK) {
 	int n = atoi(str);
 	CString c = "²ÎÊý";
