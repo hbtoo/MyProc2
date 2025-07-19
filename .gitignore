@@ -3,7 +3,12 @@
 *.ncb
 *.opt
 *.plg
+*.class
+*.jar
+*.exe
 */Debug/*
+*.xlsx
+*.log
 
 
 
