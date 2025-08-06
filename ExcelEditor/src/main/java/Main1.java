@@ -5,12 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Main1 extends JFrame {
     private JTextField outputField;
     private JTextField[] valueFields = new JTextField[8];
 
-    private final String INPUT_FILE = "1.xlsx";
+    private final String INPUT_FILE = "/Users/bohuang/Downloads/1.xlsx";
     private final int TARGET_ROW = 2;
     private final int[] COLS = {28, 29, 30, 31, 32, 33, 34, 35};
     private final String[] COL_NAMES = {
@@ -25,7 +27,7 @@ public class Main1 extends JFrame {
 
         // ==== File Path Panel ====
         JPanel filePanel = new JPanel(new GridLayout(1, 2, 5, 5));
-        outputField = new JTextField("D:/2.xlsx");
+        outputField = new JTextField("/Users/bohuang/Downloads/2.xlsx");
         filePanel.add(new JLabel("Output File:"));
         filePanel.add(outputField);
         add(filePanel, BorderLayout.NORTH);
@@ -132,7 +134,9 @@ public class Main1 extends JFrame {
                 }
             }
 
-            workbook.setForceFormulaRecalculation(true);
+            // workbook.setForceFormulaRecalculation(true);
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+            evaluator.evaluateAll();
 
             try (FileOutputStream fos = new FileOutputStream(outputField.getText().trim())) {
                 workbook.write(fos);
@@ -144,13 +148,88 @@ public class Main1 extends JFrame {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error writing file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+
+        // Test reading latest excel file
+        try (FileInputStream fis = new FileInputStream(outputField.getText().trim());
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            Row row = sheet.getRow(9); //
+            Cell cell = row.getCell(29); // 3.7E-15    1.13 E-17
+
+            JOptionPane.showMessageDialog(this, "haha: " + cell.getNumericCellValue());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error writing file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
+    public static void printAll(String fileName) throws Exception {
+        FileInputStream fis = new FileInputStream(fileName);
+        Workbook workbook = new XSSFWorkbook(fis);
+        Sheet sheet = workbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
+
+        for (int i = 0; i < 4; i++) {
+            Cell cell = row.getCell(i); // 3.7E-15    1.13 E-17
+            System.out.println(i + ", " + cell.getNumericCellValue());
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        /*SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new Main1();
             }
-        });
+        });*/
+
+
+        FileInputStream fis = new FileInputStream("D:\\5.xlsx");
+        Workbook workbook = new XSSFWorkbook(fis);
+        Sheet sheet = workbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        Cell cell = row.getCell(0);
+        cell.setCellValue(5);
+
+        //workbook.setForceFormulaRecalculation(true);
+        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+        evaluator.evaluateAll();
+
+        try (FileOutputStream fos = new FileOutputStream("D:\\6.xlsx")) {
+            workbook.write(fos);
+        }
+
+
+        String libreOfficePath = "D:\\Program Files\\LibreOffice\\program\\soffice.exe";
+
+        // Excel file path
+        String inputExcelPath = "D:\\6.xlsx";
+
+        // Output directory path
+        String outputDirPath = "D:\\output_images";
+
+        // Build the command
+        ProcessBuilder pb = new ProcessBuilder(
+                libreOfficePath,
+                "--headless",          // no GUI
+                "--convert-to", "png", // convert to PNG format
+                "--outdir", outputDirPath,
+                inputExcelPath
+        );
+
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Chart exported successfully to: " + outputDirPath);
+            } else {
+                System.err.println("Conversion failed. Exit code: " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

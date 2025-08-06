@@ -1,0 +1,5 @@
+use exe4j for jar -> exe
+install LibreOffice for excel chart to png convertion
+
+
+
