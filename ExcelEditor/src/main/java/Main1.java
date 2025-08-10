@@ -4,46 +4,183 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class Main1 extends JFrame {
-    private JTextField outputField;
+    boolean mac = false;  // default windows
+    private JTextField libreOfficeExecLocation;
+    private JTextField inputExcelFile;
+    private JTextField outputExcelFile;
     private JTextField[] valueFields = new JTextField[8];
+    private PdfPreviewPanel previewPanel;
 
-    private final String INPUT_FILE = "/Users/bohuang/Downloads/1.xlsx";
     private final int TARGET_ROW = 2;
     private final int[] COLS = {28, 29, 30, 31, 32, 33, 34, 35};
     private final String[] COL_NAMES = {
             "n(H2O)", "n(OH)", "n(H)", "n(O2)", "n(O)", "n(H2)", "n(H2O2)", "n(HO2)"
     };
 
+    // PDF Preview Panel
+    public class PdfPreviewPanel extends JPanel {
+        private JLabel pdfLabel;
+        private BufferedImage originalImage;
+        private double zoomFactor;
+
+        public PdfPreviewPanel() {
+            setLayout(new BorderLayout());
+            //setPreferredSize(new Dimension(700, 540));
+
+            pdfLabel = new JLabel();
+            pdfLabel.setHorizontalAlignment(JLabel.LEFT);
+            pdfLabel.setVerticalAlignment(JLabel.TOP);
+
+            JScrollPane scrollPane = new JScrollPane(pdfLabel);
+            add(scrollPane, BorderLayout.CENTER);
+
+            // Mouse wheel zooming
+            scrollPane.addMouseWheelListener(new MouseAdapter() {
+                @Override
+                public void mouseWheelMoved(MouseWheelEvent e) {
+                    if (e.isControlDown()) { // Zoom when Ctrl+wheel
+                        if (e.getWheelRotation() < 0) {
+                            zoomIn();
+                        } else {
+                            zoomOut();
+                        }
+                        e.consume();
+                    }
+                }
+            });
+
+            // Zoom controls panel
+            JPanel controls = new JPanel();
+            JButton zoomInBtn = new JButton("+");
+            JButton zoomOutBtn = new JButton("-");
+            JButton resetBtn = new JButton("Reset");
+
+            zoomInBtn.addActionListener(e -> zoomIn());
+            zoomOutBtn.addActionListener(e -> zoomOut());
+            resetBtn.addActionListener(e -> reset());
+
+            controls.add(zoomInBtn);
+            controls.add(zoomOutBtn);
+            controls.add(resetBtn);
+
+            add(controls, BorderLayout.SOUTH);
+        }
+
+        public void loadPdf(String pdfPath) throws IOException {
+            PDDocument document = PDDocument.load(new File(pdfPath));
+            PDFRenderer renderer = new PDFRenderer(document);
+            originalImage = renderer.renderImageWithDPI(0, 300); // First page, good DPI
+            zoomFactor = (double) getWidth() / originalImage.getWidth();
+            updateImage();
+        }
+
+        private void updateImage() {
+            if (originalImage != null) {
+                int newW = (int) (originalImage.getWidth() * zoomFactor);
+                int newH = (int) (originalImage.getHeight() * zoomFactor);
+                if (newW <=0 || newH <= 0) {
+                    return;
+                }
+                Image scaled = originalImage.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+                pdfLabel.setIcon(new ImageIcon(scaled));
+                pdfLabel.revalidate();
+            }
+        }
+
+        private void zoomIn() {
+            zoomFactor *= 1.2;
+            updateImage();
+        }
+
+        private void zoomOut() {
+            zoomFactor /= 1.2;
+            updateImage();
+        }
+
+        private void reset() {
+            zoomFactor = (double) getWidth() / originalImage.getWidth();
+            updateImage();
+        }
+    }
+
     public Main1() {
         setTitle("Excel Species Editor");
-        setSize(600, 250);
+        setSize(1000, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // ==== File Path Panel ====
-        JPanel filePanel = new JPanel(new GridLayout(1, 2, 5, 5));
-        outputField = new JTextField("/Users/bohuang/Downloads/2.xlsx");
-        filePanel.add(new JLabel("Output File:"));
-        filePanel.add(outputField);
-        add(filePanel, BorderLayout.NORTH);
+        // ==== Top Panel ====
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // ==== Species Panel ====
+        String[] options = {"Windows", "Mac"};
+        JComboBox<String> osSelector = new JComboBox<>(options);
+        osSelector.setSelectedIndex(mac ? 1 : 0);
+
+        String libreOfficePathMac = "/Applications/LibreOffice.app/Contents/MacOS/soffice";
+        String libreOfficePathWindows = "D:/Program Files/LibreOffice/program/soffice.exe";
+        libreOfficeExecLocation = new JTextField(mac ? libreOfficePathMac : libreOfficePathWindows);
+        inputExcelFile = new JTextField(mac ? "/Users/bohuang/Downloads/1.xlsx" : "1.xlsx");
+        outputExcelFile = new JTextField(mac ? "/Users/bohuang/Downloads/2.xlsx" : "2.xlsx");
+
+        // === Row 0 ===
+        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.1; // narrow
+        //topPanel.add(new JLabel("Select OS:", SwingConstants.RIGHT), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.1;
+        //topPanel.add(osSelector, gbc);
+
+        gbc.gridx = 2; gbc.gridy = 0; gbc.weightx = 0.3; // wider label
+        topPanel.add(new JLabel("Libre Office Install Location:", SwingConstants.RIGHT), gbc);
+
+        gbc.gridx = 3; gbc.gridy = 0; gbc.weightx = 0.5;
+        topPanel.add(libreOfficeExecLocation, gbc);
+
+        // === Row 1 === (equal label widths)
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.25;
+        topPanel.add(new JLabel("Input Excel File:", SwingConstants.RIGHT), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 0.25;
+        topPanel.add(inputExcelFile, gbc);
+
+        gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0.25;
+        topPanel.add(new JLabel("Output Excel File:", SwingConstants.RIGHT), gbc);
+
+        gbc.gridx = 3; gbc.gridy = 1; gbc.weightx = 0.25;
+        topPanel.add(outputExcelFile, gbc);
+
+        add(topPanel, BorderLayout.NORTH);
+
+        osSelector.addActionListener(e -> {
+            mac = osSelector.getSelectedIndex() == 1;
+            libreOfficeExecLocation.setText(mac ? libreOfficePathMac : libreOfficePathWindows);
+            inputExcelFile.setText(mac ? "/Users/bohuang/Downloads/1.xlsx" : "1.xlsx");
+            outputExcelFile.setText(mac ? "/Users/bohuang/Downloads/2.xlsx" : "2.xlsx");
+        });
+
+        // ==== Center Panel ====
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 20, 5));
         JPanel leftPanel = new JPanel(new GridBagLayout());
         JPanel rightPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         for (int i = 0; i < COLS.length; i++) {
-            JLabel label = new JLabel(COL_NAMES[i]);
+            JLabel label = new JLabel(COL_NAMES[i] + ":", SwingConstants.RIGHT);
             valueFields[i] = new JTextField();
-            valueFields[i].setPreferredSize(new Dimension(150, 25));
+            //valueFields[i].setPreferredSize(new Dimension(250, 25));
 
             gbc.gridx = 0;
             gbc.gridy = i % 4;
@@ -65,22 +202,35 @@ public class Main1 extends JFrame {
 
         centerPanel.add(leftPanel);
         centerPanel.add(rightPanel);
-        add(centerPanel, BorderLayout.CENTER);
+        //add(centerPanel, BorderLayout.CENTER);
 
-        // ==== Button Panel ====
+        // ==== Bottom Panel ====
+
         JButton runButton = new JButton("Generate Excel File");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(runButton);
-        add(buttonPanel, BorderLayout.SOUTH);
+        previewPanel = new PdfPreviewPanel();
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(runButton, BorderLayout.NORTH);
+        bottomPanel.add(previewPanel, BorderLayout.CENTER);
+
+        //add(bottomPanel, BorderLayout.SOUTH);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, centerPanel, bottomPanel);
+        splitPane.setResizeWeight(0.1);
+        splitPane.setOneTouchExpandable(false);
+        add(splitPane, BorderLayout.CENTER);
+
+        // ==== Initialize ====
 
         runButton.addActionListener(this::modifyExcel);
 
         loadInitialValues();
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void loadInitialValues() {
-        try (FileInputStream fis = new FileInputStream(INPUT_FILE);
+        try (FileInputStream fis = new FileInputStream(inputExcelFile.getText());
              Workbook workbook = new XSSFWorkbook(fis)) {
 
             Sheet sheet = workbook.getSheetAt(0);
@@ -106,7 +256,6 @@ public class Main1 extends JFrame {
                     }
                 }
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading values: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -114,7 +263,9 @@ public class Main1 extends JFrame {
     }
 
     private void modifyExcel(ActionEvent e) {
-        try (FileInputStream fis = new FileInputStream(INPUT_FILE);
+        String outputExcel = outputExcelFile.getText().trim();
+
+        try (FileInputStream fis = new FileInputStream(inputExcelFile.getText());
              Workbook workbook = new XSSFWorkbook(fis)) {
 
             Sheet sheet = workbook.getSheetAt(0);
@@ -138,98 +289,49 @@ public class Main1 extends JFrame {
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
             evaluator.evaluateAll();
 
-            try (FileOutputStream fos = new FileOutputStream(outputField.getText().trim())) {
+            try (FileOutputStream fos = new FileOutputStream(outputExcel)) {
                 workbook.write(fos);
             }
 
-            JOptionPane.showMessageDialog(this, "Excel file written:\n" + outputField.getText().trim());
+            //JOptionPane.showMessageDialog(this, "Excel file written:\n" + outputExcel);
 
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error writing file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+        String dir = mac ? "/Users/bohuang/Downloads/" : ".";
+        String pdfFile = new File(outputExcel).getName().replaceFirst("[.][^.]+$", "") + ".pdf";
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                    libreOfficeExecLocation.getText().trim(),
+                    "--headless",          // no GUI
+                    "--convert-to", "pdf", // convert to PNG format
+                    "--outdir", dir,       // pdf output directory
+                    outputExcel            // input excel file path
+            );
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("Conversion failed. Exit code: " + exitCode);
+            }
 
-        // Test reading latest excel file
-        try (FileInputStream fis = new FileInputStream(outputField.getText().trim());
-             Workbook workbook = new XSSFWorkbook(fis)) {
+            previewPanel.loadPdf(dir + "/" + pdfFile);
 
-            Sheet sheet = workbook.getSheetAt(0);
-            Row row = sheet.getRow(9); //
-            Cell cell = row.getCell(29); // 3.7E-15    1.13 E-17
-
-            JOptionPane.showMessageDialog(this, "haha: " + cell.getNumericCellValue());
+            JOptionPane.showMessageDialog(this, "Done!");
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error writing file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public static void printAll(String fileName) throws Exception {
-        FileInputStream fis = new FileInputStream(fileName);
-        Workbook workbook = new XSSFWorkbook(fis);
-        Sheet sheet = workbook.getSheetAt(0);
-        Row row = sheet.getRow(0);
-
-        for (int i = 0; i < 4; i++) {
-            Cell cell = row.getCell(i); // 3.7E-15    1.13 E-17
-            System.out.println(i + ", " + cell.getNumericCellValue());
+            JOptionPane.showMessageDialog(this, "Error exporting excel charts to pdf: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        /*SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new Main1();
             }
-        });*/
-
-
-        FileInputStream fis = new FileInputStream("D:\\5.xlsx");
-        Workbook workbook = new XSSFWorkbook(fis);
-        Sheet sheet = workbook.getSheetAt(0);
-        Row row = sheet.getRow(0);
-        Cell cell = row.getCell(0);
-        cell.setCellValue(5);
-
-        //workbook.setForceFormulaRecalculation(true);
-        FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-        evaluator.evaluateAll();
-
-        try (FileOutputStream fos = new FileOutputStream("D:\\6.xlsx")) {
-            workbook.write(fos);
-        }
-
-
-        String libreOfficePath = "D:\\Program Files\\LibreOffice\\program\\soffice.exe";
-
-        // Excel file path
-        String inputExcelPath = "D:\\6.xlsx";
-
-        // Output directory path
-        String outputDirPath = "D:\\output_images";
-
-        // Build the command
-        ProcessBuilder pb = new ProcessBuilder(
-                libreOfficePath,
-                "--headless",          // no GUI
-                "--convert-to", "png", // convert to PNG format
-                "--outdir", outputDirPath,
-                inputExcelPath
-        );
-
-        try {
-            Process process = pb.start();
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                System.out.println("Chart exported successfully to: " + outputDirPath);
-            } else {
-                System.err.println("Conversion failed. Exit code: " + exitCode);
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        });
 
     }
 }
