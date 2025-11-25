@@ -14,6 +14,11 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class Main1 extends JFrame {
     boolean mac = false;  // default windows
+
+    // 1: 1.xlsx
+    // 2: 2.xlsx
+    int mode = 1;
+
     private JTextField libreOfficeExecLocation;
     private JTextField inputExcelFile;
     private JTextField outputExcelFile;
@@ -76,9 +81,10 @@ public class Main1 extends JFrame {
         }
 
         public void loadPdf(String pdfPath) throws IOException {
-            PDDocument document = PDDocument.load(new File(pdfPath));
-            PDFRenderer renderer = new PDFRenderer(document);
-            originalImage = renderer.renderImageWithDPI(0, 300); // First page, good DPI
+            try (PDDocument document = PDDocument.load(new File(pdfPath))) {
+                PDFRenderer renderer = new PDFRenderer(document);
+                originalImage = renderer.renderImageWithDPI(0, 300); // First page, good DPI
+            }
             zoomFactor = (double) getWidth() / originalImage.getWidth();
             updateImage();
         }
@@ -113,8 +119,8 @@ public class Main1 extends JFrame {
     }
 
     public Main1() {
-        setTitle("Excel Species Editor");
-        setSize(1000, 800);
+        setTitle("溶液计算");
+        setSize(1000, 750);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
@@ -130,9 +136,17 @@ public class Main1 extends JFrame {
 
         String libreOfficePathMac = "/Applications/LibreOffice.app/Contents/MacOS/soffice";
         String libreOfficePathWindows = "D:/Program Files/LibreOffice/program/soffice.exe";
+
         libreOfficeExecLocation = new JTextField(mac ? libreOfficePathMac : libreOfficePathWindows);
-        inputExcelFile = new JTextField(mac ? "/Users/bohuang/Downloads/1.xlsx" : "1.xlsx");
-        outputExcelFile = new JTextField(mac ? "/Users/bohuang/Downloads/2.xlsx" : "2.xlsx");
+        inputExcelFile = new JTextField(mac ? "/Users/bohuang/Downloads/" + mode + ".xlsx" : mode + ".xlsx");
+        outputExcelFile = new JTextField(mac ? "/Users/bohuang/Downloads/" + mode + "-out.xlsx" : mode + "-out.xlsx");
+
+        osSelector.addActionListener(e -> {
+            mac = osSelector.getSelectedIndex() == 1;
+            libreOfficeExecLocation.setText(mac ? libreOfficePathMac : libreOfficePathWindows);
+            inputExcelFile.setText(mac ? "/Users/bohuang/Downloads/" + mode + ".xlsx" : mode + ".xlsx");
+            outputExcelFile.setText(mac ? "/Users/bohuang/Downloads/" + mode + "-out.xlsx" : mode + "-out.xlsx");
+        });
 
         // === Row 0 ===
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.1; // narrow
@@ -161,13 +175,6 @@ public class Main1 extends JFrame {
         topPanel.add(outputExcelFile, gbc);
 
         add(topPanel, BorderLayout.NORTH);
-
-        osSelector.addActionListener(e -> {
-            mac = osSelector.getSelectedIndex() == 1;
-            libreOfficeExecLocation.setText(mac ? libreOfficePathMac : libreOfficePathWindows);
-            inputExcelFile.setText(mac ? "/Users/bohuang/Downloads/1.xlsx" : "1.xlsx");
-            outputExcelFile.setText(mac ? "/Users/bohuang/Downloads/2.xlsx" : "2.xlsx");
-        });
 
         // ==== Center Panel ====
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 20, 5));
@@ -285,9 +292,9 @@ public class Main1 extends JFrame {
                 }
             }
 
-            // workbook.setForceFormulaRecalculation(true);
-            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-            evaluator.evaluateAll();
+            workbook.setForceFormulaRecalculation(true);
+            //FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+            //evaluator.evaluateAll();
 
             try (FileOutputStream fos = new FileOutputStream(outputExcel)) {
                 workbook.write(fos);
@@ -300,7 +307,10 @@ public class Main1 extends JFrame {
             JOptionPane.showMessageDialog(this, "Error writing file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        String dir = mac ? "/Users/bohuang/Downloads/" : ".";
+        File outFile = new File(outputExcelFile.getText().trim());
+        String dir = outFile.getParent();
+        if (dir == null)
+            dir = ".";
         String pdfFile = new File(outputExcel).getName().replaceFirst("[.][^.]+$", "") + ".pdf";
         try {
             ProcessBuilder pb = new ProcessBuilder(
