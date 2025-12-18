@@ -9,9 +9,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e6274b66-4d81-4bdf-9d9a-1aee6d297ba8" name="Default Changelist" comment="" />
-    <ignored path="$PROJECT_DIR$/target/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="e6274b66-4d81-4bdf-9d9a-1aee6d297ba8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource/matlab.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/resource/matlab.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ExcelEditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ExcelEditorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Matlab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Matlab.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -104,6 +107,10 @@
       </list>
     </option>
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
@@ -111,7 +118,6 @@
     <option name="height" value="730" />
   </component>
   <component name="ProjectId" id="314Sj4dvzDJwV5PWKOFAmbTY9Oh" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -155,39 +161,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
-    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
-    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
-    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="exceleditor" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1764118369590" />
-    <property name="project.structure.last.edited" value="Artifacts" />
-    <property name="project.structure.proportion" value="0.14247787" />
-    <property name="project.structure.side.proportion" value="0.14447884" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;应用程序.Main1.executor&quot;: &quot;Run&quot;
+  }
+}</component>
   <component name="RunManager">
     <configuration name="Main1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="-XX:HeapBaseMinAddress" value="8g" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="Main1" />
       <module name="ExcelEditor" />
+      <option name="PROGRAM_PARAMETERS" value="-XX:HeapBaseMinAddress=8g" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main1" />
+        <item itemvalue="应用程序.Main1" />
       </list>
     </recent_temporary>
   </component>
@@ -254,7 +250,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://D:/Program Files/Java/jdk-11.0.2/lib/src.zip!/java.desktop/javax/swing/JTextField.java">
+    <entry file="jar://$PROJECT_DIR$/../../../Program Files/Java/jdk-11.0.2/lib/src.zip!/java.desktop/javax/swing/JTextField.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="137">
           <caret line="180" column="11" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="11" />
